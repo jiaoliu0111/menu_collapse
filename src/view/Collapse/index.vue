@@ -33,6 +33,10 @@ export default {
 .bigBox {
   padding: 3px 20px;
 }
+.firstMenu,
+.secondMenu {
+  cursor: pointer;
+}
 .firstMenu {
   position: relative;
   padding-left: 20px;
