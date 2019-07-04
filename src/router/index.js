@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
-
-export default new Router({
+/* eslint-disable */
+const router = new Router({
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
+    { path: '/', redirect: '/login'},
+    { path: '/home', component: () => import('@/view/Home')},
+    { path: '/login', component: () => import('@/view/Login')},
+    { path: '/study', component: () => import('@/view/Study')},
+    { path: '/collapse', component: () => import('@/view/Collapse')}
   ]
 })
+
+export default router
