@@ -4,26 +4,30 @@
     <div class="top">
       <div class="fl">所有后台模块</div>
       <div class="fr">
-        <input id="aL" class="look" type="checkbox" @change="changeCheck"><span class="mr20">查看</span>
-        <input id="aM" class="manage" type="checkbox"><span class="mr20">管理</span>
+        <!-- <input id="aL" class="look" type="checkbox"><span class="mr20">查看</span>
+        <input id="aM" class="manage" type="checkbox"><span class="mr20">管理</span> -->
+        <input id="aL"  type="checkbox"><span class="mr20">查看</span>
+        <input id="aM" type="checkbox"><span class="mr20">管理</span>
       </div>
     </div>
 
     <div v-for="item in menu" :key="item.id" class="bigBox">
       <!-- 一级菜单 -->
-      <div :class="{collapsed: item.collapse}" class="firstMenu"><!--展开加上 collapsed 类名-->
+      <div :class="{collapsed: !item.collapse}" class="firstMenu"><!--展开加上 collapsed 类名-->
         <div class="fl" @click="item.collapse = !item.collapse">{{ item.name }}</div>
         <div class="fr">
-          <input id="fML" class="look" type="checkbox"><span class="mr20">查看</span>
-          <input id="fMM" class="manage" type="checkbox"><span class="mr20">管理</span>
+          <input class="fMLook look" type="checkbox"><span class="mr20">查看</span>
+          <input class="fMManage manage" type="checkbox"><span class="mr20">管理</span>
         </div>
       </div>
       <!-- 二级菜单 -->
-      <div v-for="i in item.children" :key="i.id" class="secondMenu" :class="{in: item.collapse}"><!--显示加上 in 类名-->
-        <div class="fl">{{ i.name }}</div>
-        <div class="fr">
-          <input id="sML" class="look" type="checkbox"><span class="mr20">查看</span>
-          <input id="sMM" class="manage" type="checkbox"><span class="mr20">管理</span>
+      <div>
+        <div v-for="i in item.children" :key="i.id" class="secondMenu" :class="{in: !item.collapse}"><!--显示加上 in 类名-->
+          <div class="fl">{{ i.name }}</div>
+          <div class="fr">
+            <input class="sMLook look" type="checkbox"><span class="mr20">查看</span>
+            <input class="sMManage manage" type="checkbox"><span class="mr20">管理</span>
+          </div>
         </div>
       </div>
     </div>
@@ -45,17 +49,78 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.changeCheck()
+  },
   methods: {
     changeCheck () { // 监听check事件
       $(function () {
         let allLook = $('#aL')[0]
+        let allManage = $('#aM')[0]
         let lookInputs = $('input.look')
         let manageInputs = $('input.manage')
+        let fMLooks = $('.fMLook')
+        let fMManage = $('.fMManage')
+        let sMLooks = $('.sMLook')
+        // let sMManage = $('.sMManage')
+        // 顶部 从上->下
         allLook.onclick = function () {
-          for (let i = 0; i < lookInputs.length; i++) {
-            lookInputs[i].checked = allLook.checked
-          }
+          lookInputs.each((index, ele) => { ele.checked = this.checked })
         }
+        allManage.onclick = function () {
+          manageInputs.each((index, ele) => { ele.checked = this.checked })
+        }
+        // 一级菜单 从上->下
+        fMLooks.each((index, ele) => {
+          ele.onclick = function () {
+            $(this).parent().parent().siblings().find('.sMLook').each((index, ele) => { ele.checked = this.checked })
+          }
+        })
+        fMManage.each((index, ele) => {
+          ele.onclick = function () {
+            console.log('$(this):', $(this))
+            $(this).parent().parent().siblings().find('.sMManage').each((index, ele) => { ele.checked = this.checked })
+          }
+        })
+        // 二级菜单 从下->上
+        // sMLooks.each((index, ele) => {
+        //   ele.onclick = function () {
+        //     var flag = true
+        //     console.log('$(this).parent().parent().parent().find(.sMLooks):', $(this).parent().parent().parent().find('.sMLooks'))
+        //     $(this).parent().parent().parent().find('.sMLooks').each((index, ele) => {
+        //       console.log('ele:', ele)
+        //       if (ele.checked === false) {
+        //         flag = false
+        //         // break
+        //       }
+        //     })
+        //     console.log('flag:', flag)
+        //     if (flag) {
+        //       $(this).parent().parent().parent().siblings().find('.fMLook').checked = true
+        //     } else {
+        //       $(this).parent().parent().parent().siblings().find('.fMLook').checked = false
+        //     }
+        //   }
+        // })
+        // for (let i = 0; i < sMLooks.length; i++) {
+        // sMLooks[i].onclick = function () {
+        sMLooks.each((index, ele) => {
+          ele.onclick = function () {
+            var flag = true
+            for (var i = 0; i < $(this).parent().parent().parent().find('.sMLook').length; i++) {
+              if ($(this).parent().parent().parent().find('.sMLook')[i].checked === false) {
+                flag = false
+                break
+              }
+            }
+            console.log('flag:', flag)
+            if (flag) {
+              $(this).parent().parent().parent().parent().find('.fMLook')[0].checked = true
+            } else {
+              $(this).parent().parent().parent().parent().find('.fMLook')[0].checked = false
+            }
+          }
+        })
       })
     }
   }
