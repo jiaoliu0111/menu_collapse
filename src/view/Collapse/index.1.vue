@@ -1,36 +1,15 @@
 <template>
-  <div class="container">
-
-    <div class="top">
-      <div class="fl">所有后台模块</div>
-      <div class="fr">
-        <input id="aL" class="look" type="checkbox" @change="changeCheck"><span class="mr20">查看</span>
-        <input id="aM" class="manage" type="checkbox"><span class="mr20">管理</span>
-      </div>
-    </div>
+  <div>
 
     <div v-for="item in menu" :key="item.id" class="bigBox">
       <!-- 一级菜单 -->
-      <div :class="{collapsed: item.collapse}" class="firstMenu"><!--展开加上 collapsed 类名-->
-        <div class="fl" @click="item.collapse = !item.collapse">{{ item.name }}</div>
-        <div class="fr">
-          <input id="fML" class="look" type="checkbox"><span class="mr20">查看</span>
-          <input id="fMM" class="manage" type="checkbox"><span class="mr20">管理</span>
-        </div>
-      </div>
+      <div :class="{collapsed: item.collapse}" class="firstMenu" @click="item.collapse = !item.collapse">{{ item.name }}</div><!--展开加上 collapsed 类名-->
       <!-- 二级菜单 -->
-      <div v-for="i in item.children" :key="i.id" class="secondMenu" :class="{in: item.collapse}"><!--显示加上 in 类名-->
-        <div class="fl">{{ i.name }}</div>
-        <div class="fr">
-          <input id="sML" class="look" type="checkbox"><span class="mr20">查看</span>
-          <input id="sMM" class="manage" type="checkbox"><span class="mr20">管理</span>
-        </div>
-      </div>
+      <div v-for="i in item.children" :key="i.id" class="secondMenu" :class="{in: item.collapse}">{{i.name}}</div><!--显示加上 in 类名-->
     </div>
   </div>
 </template>
 <script>
-import $ from 'jquery'
 export default {
   data () {
     return {
@@ -46,18 +25,7 @@ export default {
     }
   },
   methods: {
-    changeCheck () { // 监听check事件
-      $(function () {
-        let allLook = $('#aL')[0]
-        let lookInputs = $('input.look')
-        let manageInputs = $('input.manage')
-        allLook.onclick = function () {
-          for (let i = 0; i < lookInputs.length; i++) {
-            lookInputs[i].checked = allLook.checked
-          }
-        }
-      })
-    }
+
   }
 }
 </script>
@@ -68,7 +36,6 @@ export default {
 .firstMenu,
 .secondMenu {
   cursor: pointer;
-  overflow: hidden;
 }
 .firstMenu {
   position: relative;
@@ -103,23 +70,5 @@ export default {
 }
 .in {
   display: block;
-}
-.fl {
-  float: left;
-}
-.fr {
-  float: right;
-}
-.mr20 {
-  margin-right: 20px;
-}
-.top {
-  overflow: hidden;
-  padding: 3px 20px;
-}
-.container {
-  width: 600px;
-  padding: 30px;
-  border: 1px solid #ccc;
 }
 </style>
