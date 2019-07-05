@@ -45,7 +45,7 @@ export default {
         {id: 4, name: '一级菜单4', collapse: false, children: [{id: 41, name: '一级菜单4-1'}, {id: 42, name: '一级菜单4-2'}]},
         {id: 5, name: '一级菜单5', collapse: false, children: [{id: 51, name: '一级菜单5-1'}, {id: 52, name: '一级菜单5-2'}, {id: 53, name: '一级菜单5-3'}]},
         {id: 6, name: '一级菜单6', collapse: false, children: [{id: 61, name: '一级菜单6-1'}, {id: 62, name: '一级菜单6-2'}]},
-        {id: 7, name: '一级菜单7', collapse: false, children: [{id: 71, name: '一级菜单7-1'}, {id: 72, name: '一级菜单7-2'}]}
+        // {id: 7, name: '一级菜单7', collapse: false, children: [{id: 71, name: '一级菜单7-1'}, {id: 72, name: '一级菜单7-2'}]}
       ]
     }
   },
@@ -62,7 +62,7 @@ export default {
         let fMLooks = $('.fMLook')
         let fMManage = $('.fMManage')
         let sMLooks = $('.sMLook')
-        // let sMManage = $('.sMManage')
+        let sMManage = $('.sMManage')
         // 顶部 从上->下
         allLook.onclick = function () {
           lookInputs.each((index, ele) => { ele.checked = this.checked })
@@ -73,61 +73,92 @@ export default {
         // 一级菜单 从上->下
         fMLooks.each((index, ele) => {
           ele.onclick = function () {
+            // 让当前菜单下的二级菜单全部选中
             $(this).parent().parent().siblings().find('.sMLook').each((index, ele) => { ele.checked = this.checked })
+            // 判断是否勾选全选
+            var flag = true
+            for (var i = 0; i < fMLooks.length; i++) {
+              if (fMLooks[i].checked === false) {
+                flag = false
+                break
+              }
+            }
+            if (flag) {
+              allLook.checked = true
+            } else {
+              allLook.checked = false
+            }
           }
         })
         fMManage.each((index, ele) => {
           ele.onclick = function () {
-            console.log('$(this):', $(this))
             $(this).parent().parent().siblings().find('.sMManage').each((index, ele) => { ele.checked = this.checked })
+            var flag = true
+            for (var i = 0; i < fMManage.length; i++) {
+              if (fMManage[i].checked === false) {
+                flag = false
+                break
+              }
+            }
+            if (flag) {
+              allManage.checked = true
+            } else {
+              allManage.checked = false
+            }
           }
         })
         // 二级菜单 从下->上
-        // sMLooks.each((index, ele) => {
-        //   ele.onclick = function () {
-        //     var flag = true
-        //     console.log('$(this).parent().parent().parent().find(.sMLooks):', $(this).parent().parent().parent().find('.sMLooks'))
-        //     $(this).parent().parent().parent().find('.sMLooks').each((index, ele) => {
-        //       console.log('ele:', ele)
-        //       if (ele.checked === false) {
-        //         flag = false
-        //         // break
-        //       }
-        //     })
-        //     console.log('flag:', flag)
-        //     if (flag) {
-        //       $(this).parent().parent().parent().siblings().find('.fMLook').checked = true
-        //     } else {
-        //       $(this).parent().parent().parent().siblings().find('.fMLook').checked = false
-        //     }
-        //   }
-        // })
-        // for (let i = 0; i < sMLooks.length; i++) {
-        // sMLooks[i].onclick = function () {
         sMLooks.each((index, ele) => {
           ele.onclick = function () {
+            // 判断是否勾选一级菜单
             var flag = true
-            // 实现方式一：
-            // $(this).parent().parent().parent().find('.sMLook').each((index, ele) => {
-            // if (ele.checked === false) {
-            // flag = false
-            // }
-            // })
-            // 实现方式二：更快捷
             for (var i = 0; i < $(this).parent().parent().parent().find('.sMLook').length; i++) {
               if ($(this).parent().parent().parent().find('.sMLook')[i].checked === false) {
                 flag = false
                 break
               }
             }
-            console.log('flag:', flag)
             if (flag) {
               $(this).parent().parent().parent().parent().find('.fMLook')[0].checked = true
             } else {
               $(this).parent().parent().parent().parent().find('.fMLook')[0].checked = false
             }
+            // 判断是否勾选全选菜单
+            isSelectAll(fMLooks, allLook)
           }
         })
+        sMManage.each((index, ele) => {
+          ele.onclick = function () {
+            var flag = true
+            for (var i = 0; i < $(this).parent().parent().parent().find('.sMManage').length; i++) {
+              if ($(this).parent().parent().parent().find('.sMManage')[i].checked === false) {
+                flag = false
+                break
+              }
+            }
+            if (flag) {
+              $(this).parent().parent().parent().parent().find('.fMManage')[0].checked = true
+            } else {
+              $(this).parent().parent().parent().parent().find('.fMManage')[0].checked = false
+            }
+            // 判断是否勾选全选菜单
+            isSelectAll(fMManage, allManage)
+          }
+        })
+        function isSelectAll (eles, targetEle) {
+          var flag2 = true
+          for (var j = 0; j < eles.length; j++) {
+            if (eles[j].checked === false) {
+              flag2 = false
+              break
+            }
+          }
+          if (flag2) {
+            targetEle.checked = true
+          } else {
+            targetEle.checked = false
+          }
+        }
       })
     }
   }
