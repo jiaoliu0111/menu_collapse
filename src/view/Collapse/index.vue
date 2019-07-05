@@ -107,6 +107,13 @@ export default {
         sMLooks.each((index, ele) => {
           ele.onclick = function () {
             var flag = true
+            // 实现方式一：
+            // $(this).parent().parent().parent().find('.sMLook').each((index, ele) => {
+            // if (ele.checked === false) {
+            // flag = false
+            // }
+            // })
+            // 实现方式二：更快捷
             for (var i = 0; i < $(this).parent().parent().parent().find('.sMLook').length; i++) {
               if ($(this).parent().parent().parent().find('.sMLook')[i].checked === false) {
                 flag = false
