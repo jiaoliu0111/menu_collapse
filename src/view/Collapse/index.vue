@@ -76,35 +76,13 @@ export default {
             // 让当前菜单下的二级菜单全部选中
             $(this).parent().parent().siblings().find('.sMLook').each((index, ele) => { ele.checked = this.checked })
             // 判断是否勾选全选
-            var flag = true
-            for (var i = 0; i < fMLooks.length; i++) {
-              if (fMLooks[i].checked === false) {
-                flag = false
-                break
-              }
-            }
-            if (flag) {
-              allLook.checked = true
-            } else {
-              allLook.checked = false
-            }
+            isSelectAll(fMLooks, allLook)
           }
         })
         fMManage.each((index, ele) => {
           ele.onclick = function () {
             $(this).parent().parent().siblings().find('.sMManage').each((index, ele) => { ele.checked = this.checked })
-            var flag = true
-            for (var i = 0; i < fMManage.length; i++) {
-              if (fMManage[i].checked === false) {
-                flag = false
-                break
-              }
-            }
-            if (flag) {
-              allManage.checked = true
-            } else {
-              allManage.checked = false
-            }
+            isSelectAll(fMManage, allManage)
           }
         })
         // 二级菜单 从下->上
